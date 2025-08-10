@@ -1,4 +1,10 @@
 .idea
 spring-ai-test.iml
 /mcp-client-sse/.mvn/
+/mcp-client-sse/target/
 /mcp-server-sse/.mvn/
+/mcp-server-sse/target/
+/mcp-client-webflux/.mvn/
+/mcp-client-webflux/target/
+/mcp-server-webflux/.mvn/
+/mcp-server-webflux/target/
