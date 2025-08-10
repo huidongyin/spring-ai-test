@@ -1,0 +1,10 @@
+spring:
+  # NOTE: You must disable the banner and the console logging
+  # to allow the STDIO transport to work !!!
+  ai:
+    mcp:
+      server:
+        sse-endpoint: /custom-sse
+        name: my-weather-server
+        version: 1.0.1
+
