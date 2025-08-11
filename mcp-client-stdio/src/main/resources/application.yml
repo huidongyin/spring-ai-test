@@ -1,0 +1,13 @@
+spring:
+  ai:
+    mcp:
+      client:
+        stdio:
+          connections:
+            server1:
+              command: java
+              args:
+                - -jar
+                - /Users/HuidongYin/code/spring-ai-test/mcp-server-stdio/target/mcp-server-stdio-0.0.1-SNAPSHOT.jar
+              env:
+                DEBUG: "true"

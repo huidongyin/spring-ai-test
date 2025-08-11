@@ -1,5 +1,4 @@
 .idea
-spring-ai-test.iml
 /mcp-client-sse/.mvn/
 /mcp-client-sse/target/
 /mcp-server-sse/.mvn/
@@ -8,3 +7,8 @@ spring-ai-test.iml
 /mcp-client-webflux/target/
 /mcp-server-webflux/.mvn/
 /mcp-server-webflux/target/
+/mcp-client-stdio/.mvn/
+/mcp-client-stdio/target/
+/mcp-server-stdio/.mvn/
+/mcp-server-stdio/target/
+*.log
