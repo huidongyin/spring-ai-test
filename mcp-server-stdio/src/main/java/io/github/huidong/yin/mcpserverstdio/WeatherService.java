@@ -79,7 +79,7 @@ public class WeatherService {
 	 */
 	@Tool(description = "Get weather forecast for a specific latitude/longitude")
 	public String getWeatherForecastByLocation(double latitude, double longitude) {
-
+		log.info("getWeatherForecastByLocation");
 		var points = restClient.get()
 			.uri("/points/{latitude},{longitude}", latitude, longitude)
 			.retrieve()
@@ -108,6 +108,7 @@ public class WeatherService {
 	 */
 	@Tool(description = "Get weather alerts for a US state. Input is Two-letter US state code (e.g. CA, NY)")
 	public String getAlerts(@ToolParam( description =  "Two-letter US state code (e.g. CA, NY") String state) {
+		log.info("getAlerts");
 		Alert alert = restClient.get().uri("/alerts/active/area/{state}", state).retrieve().body(Alert.class);
 		log.info("alert text: {}", alert);
 		return alert.features()

@@ -7,8 +7,6 @@ import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-
 @SpringBootTest
 @Slf4j
 class McpClientStdioApplicationTests {
@@ -31,5 +29,6 @@ class McpClientStdioApplicationTests {
         var chatClient = chatClientBuilder.defaultToolCallbacks(toolCallbackProvider).build();
         log.info(">>> STRING LIST: {}", chatClient.prompt().user("How many Mcp tools do we have ?").call().content());
     }
+
 
 }

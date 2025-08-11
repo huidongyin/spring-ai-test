@@ -8,6 +8,6 @@ spring:
               command: java
               args:
                 - -jar
-                - /Users/HuidongYin/code/spring-ai-test/mcp-server-stdio/target/mcp-server-stdio-0.0.1-SNAPSHOT.jar
+                - /Users/huidong/code/spring-ai-v2/spring-ai-test/mcp-server-stdio/target/mcp-server-stdio-0.0.1-SNAPSHOT.jar
               env:
                 DEBUG: "true"

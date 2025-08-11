@@ -13,4 +13,4 @@ logging:
   pattern:
     console:
   file:
-    name: /Users/HuidongYin/code/spring-ai-test/mcp-server-stdio/src/main/resources/mcp-server-stdio.log
+    name: ./mcp-server-stdio.log
