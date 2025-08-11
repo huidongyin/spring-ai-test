@@ -2,8 +2,10 @@ package io.github.huidong.yin.mcpserversse;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class WeatherService {
 
@@ -94,7 +97,7 @@ public class WeatherService {
 					""", p.name(), p.temperature(), p.temperatureUnit(), p.windSpeed(), p.windDirection(),
 					p.detailedForecast());
 		}).collect(Collectors.joining());
-
+		log.info("call Tool getWeatherForecastByLocation");
 		return forecastText;
 	}
 
@@ -107,7 +110,7 @@ public class WeatherService {
 	@Tool(description = "Get weather alerts for a US state. Input is Two-letter US state code (e.g. CA, NY)")
 	public String getAlerts(@ToolParam( description =  "Two-letter US state code (e.g. CA, NY") String state) {
 		Alert alert = restClient.get().uri("/alerts/active/area/{state}", state).retrieve().body(Alert.class);
-
+		log.info("call Tool getAlerts");
 		return alert.features()
 			.stream()
 			.map(f -> String.format("""
@@ -120,6 +123,13 @@ public class WeatherService {
 					f.properties.description(), f.properties.instruction()))
 			.collect(Collectors.joining("\n"));
 	}
+
+	@Tool(description = "return current time zone .")
+	public String getTimeZone(){
+		log.info("call Tool getTimeZone");
+		return LocaleContextHolder.getTimeZone().getID();
+	}
+
 
 	public static void main(String[] args) {
 		WeatherService client = new WeatherService();
