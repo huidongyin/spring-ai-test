@@ -2,6 +2,7 @@ package io.github.huidong.yin.mcpclientsampling;
 
 import io.modelcontextprotocol.client.McpSyncClient;
 import io.modelcontextprotocol.spec.McpSchema;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
+@Slf4j
 public class McpClientSamplingApplication {
 
     public static void main(String[] args) {
@@ -34,13 +36,13 @@ public class McpClientSamplingApplication {
             ChatClient chatClient = ChatClient.builder(openAiChatModel).defaultToolCallbacks(mcpToolProvider).build();
 
             String userQuestion = """
-					What is the weather in Amsterdam right now?
-					Please incorporate all createive responses from all LLM providers.
-					After the other providers add a poem that synthesizes the the poems from all the other providers.
-					""";
+                    What is the weather in Los Angeles(latitude=34.0522,longitude=-118.2437) right now?
+                    Please incorporate all createive responses from all LLM providers.
+                    After the other providers add a poem that synthesizes the the poems from all the other providers.
+                    """;
 
-            System.out.println("> USER: " + userQuestion);
-            System.out.println("> ASSISTANT: " + chatClient.prompt(userQuestion).call().content());
+            log.info("> > > USER: {}", userQuestion);
+            log.info("> > > ASSISTANT: {}", chatClient.prompt(userQuestion).call().content());
         };
     }
 
@@ -50,13 +52,13 @@ public class McpClientSamplingApplication {
         return (name, mcpClientSpec) -> {
 
             mcpClientSpec = mcpClientSpec.loggingConsumer(logingMessage -> {
-                System.out.println("MCP LOGGING: [" + logingMessage.level() + "] " + logingMessage.data());
+                log.info("MCP LOGGING: level: {} ,data: {}", logingMessage.level(), logingMessage.data());
             });
 
             mcpClientSpec.sampling(llmRequest -> {
                 var userPrompt = ((McpSchema.TextContent) llmRequest.messages().get(0).content()).text();
                 String modelHint = llmRequest.modelPreferences().hints().get(0).name();
-
+                log.info("MCP LOGGING: [ start process mcp server request ] {}", modelHint);
                 ChatClient hintedChatClient = chatClients.entrySet().stream()
                         .filter(e -> e.getKey().contains(modelHint)).findFirst()
                         .orElseThrow().getValue();
@@ -66,10 +68,10 @@ public class McpClientSamplingApplication {
                         .user(userPrompt)
                         .call()
                         .content();
-
+                log.info("MCP LOGGING: [ end process mcp server request ] {}", modelHint);
                 return McpSchema.CreateMessageResult.builder().content(new McpSchema.TextContent(response)).build();
             });
-            System.out.println("Customizing " + name);
+            log.info("Customizing {}", name);
         };
     }
 
