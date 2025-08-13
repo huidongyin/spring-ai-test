@@ -15,6 +15,8 @@ import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,6 +114,7 @@ public class WeatherService {
                                                         + ModelOptionsUtils
                                                         .toJsonStringPrettyPrinter(forecast)))));
 
+
                         var opeAiLlmMessageRequest = messageRequestBuilder
                                 .modelPreferences(McpSchema.ModelPreferences.builder().addHint("openai").build())
                                 .build();
@@ -120,13 +123,34 @@ public class WeatherService {
                         log.info("end call Mcp Tool sampling forecast OpenAI");
                         openAiWeatherPoem.append(((McpSchema.TextContent) openAiLlmResponse.content()).text());
 
-                        var anthropicLlmMessageRequest = messageRequestBuilder
+                        var deepseekLlmMessageRequest = messageRequestBuilder
                                 .modelPreferences(McpSchema.ModelPreferences.builder().addHint("deepseek").build())
                                 .build();
                         log.info("start call Mcp Tool sampling forecast DeepSeek");
-                        McpSchema.CreateMessageResult deepseekAiLlmResponse = exchange.createMessage(anthropicLlmMessageRequest);
+                        McpSchema.CreateMessageResult deepseekAiLlmResponse = exchange.createMessage(deepseekLlmMessageRequest);
                         log.info("end call Mcp Tool sampling forecast DeepSeek");
                         deepseekWeatherPoem.append(((McpSchema.TextContent) deepseekAiLlmResponse.content()).text());
+                        //todo: 并发安全问题：issue：https://github.com/spring-projects/spring-ai/issues/4127
+//                        CompletableFuture<Void> openai = CompletableFuture.runAsync(() -> {
+//                            var opeAiLlmMessageRequest = messageRequestBuilder
+//                                    .modelPreferences(McpSchema.ModelPreferences.builder().addHint("openai").build())
+//                                    .build();
+//                            log.info("start call Mcp Tool sampling forecast OpenAI");
+//                            McpSchema.CreateMessageResult openAiLlmResponse = exchange.createMessage(opeAiLlmMessageRequest);
+//                            log.info("end call Mcp Tool sampling forecast OpenAI");
+//                            openAiWeatherPoem.append(((McpSchema.TextContent) openAiLlmResponse.content()).text());
+//                        });
+//                        CompletableFuture<Void> deepseek = CompletableFuture.runAsync(() -> {
+//                            var deepseekLlmMessageRequest = messageRequestBuilder
+//                                    .modelPreferences(McpSchema.ModelPreferences.builder().addHint("deepseek").build())
+//                                    .build();
+//                            log.info("start call Mcp Tool sampling forecast DeepSeek");
+//                            McpSchema.CreateMessageResult deepseekAiLlmResponse = exchange.createMessage(deepseekLlmMessageRequest);
+//                            log.info("end call Mcp Tool sampling forecast DeepSeek");
+//                            deepseekWeatherPoem.append(((McpSchema.TextContent) deepseekAiLlmResponse.content()).text());
+//                        });
+//
+//                        CompletableFuture.allOf(openai,deepseek).join();
 
                     }
 
@@ -143,5 +167,6 @@ public class WeatherService {
                 + ModelOptionsUtils.toJsonStringPrettyPrinter(forecast);
 
     }
+
 
 }
