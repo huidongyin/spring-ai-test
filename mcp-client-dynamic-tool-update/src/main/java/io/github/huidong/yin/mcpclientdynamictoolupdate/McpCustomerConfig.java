@@ -26,9 +26,10 @@ public class McpCustomerConfig {
             @Override
             public void customize(String name, McpClient.SyncSpec spec) {
                 spec.toolsChangeConsumer(new Consumer<List<McpSchema.Tool>>() {
+                    //todo:issue:
                     @Override
                     public void accept(List<McpSchema.Tool> tools) {
-                        log.info("times:{}tools change: {}", atomicInteger.incrementAndGet(), tools);
+                        log.info("times:{} ,server name : {} , tools change: {}", atomicInteger.incrementAndGet(), name, tools);
                         flag.set(true);
                     }
                 });

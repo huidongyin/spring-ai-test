@@ -1,38 +1,38 @@
 package io.github.huidong.yin.mcpclientdynamictoolupdate;
 
-import io.modelcontextprotocol.client.McpClient;
+import io.modelcontextprotocol.client.McpSyncClient;
 import io.modelcontextprotocol.spec.McpSchema;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.mcp.customizer.McpSyncClientCustomizer;
+import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
+import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestClient;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @SpringBootTest
 @Slf4j
 class McpClientDynamicToolUpdateApplicationTests {
 
-
-
     @Autowired
     private ChatModel deepseekChatModel;
 
     @Autowired
     private ToolCallbackProvider toolCallbackProvider;
+
+    @Autowired
+    private List<McpSyncClient> mcpSyncClients;
 
     @Test
     void contextLoads() {
@@ -64,11 +64,33 @@ class McpClientDynamicToolUpdateApplicationTests {
         log.info("tool list : \n {}", (CollectionUtils.isEmpty(toolDescriptionList) ? Collections.emptyList() : toolDescriptionList).stream().map(td -> td.toString()).collect(Collectors.joining("\n")));
     }
 
-    public static record ToolDescription(String toolName, String toolDescription) {
+    public record ToolDescription(String toolName, String toolDescription) {
         @Override
-        public final String toString() {
+        public String toString() {
             return "Tool: " + toolName + " -> " + toolDescription;
         }
+    }
+
+
+    @Test
+    public void test() {
+        for (McpSyncClient client : mcpSyncClients) {
+            McpSchema.Implementation serverInfo = client.getServerInfo();
+            String name = serverInfo.name();
+            String version = serverInfo.version();
+            log.info("current mcp sync client : {} , server info : [name:{} , version:{}]",client.getClientInfo().name(),name,version);
+            McpSchema.ListToolsResult tools = client.listTools();
+            String toolList = tools.tools().stream().map(McpSchema.Tool::name).collect(Collectors.joining(","));
+            log.info("tool list : \n {}", toolList);
+        }
+    }
+
+    @Test
+    public void test2() {
+        log.info("tool callback provider type : {}", toolCallbackProvider instanceof SyncMcpToolCallbackProvider ? "Sync":"Async");
+        ToolCallback[] toolCallbacks = toolCallbackProvider.getToolCallbacks();
+        String tools = Arrays.stream(toolCallbacks).map(toolCallback -> toolCallback.getToolDefinition().name()).collect(Collectors.joining(","));
+        log.info("tool list : \n {}", tools);
     }
 
 }
