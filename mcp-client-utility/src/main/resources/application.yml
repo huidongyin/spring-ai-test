@@ -1,0 +1,9 @@
+spring:
+  ai:
+    mcp:
+      client:
+        sse:
+          connections:
+            test-server:
+              url: http://localhost:8087
+              sse-endpoint: /custom-sse

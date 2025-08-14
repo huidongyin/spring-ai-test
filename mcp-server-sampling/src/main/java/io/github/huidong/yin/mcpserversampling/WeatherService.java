@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 public class WeatherService {
 
 
-
-
     private static final String BASE_URL = "https://api.weather.gov";
 
     private final RestClient restClient;
