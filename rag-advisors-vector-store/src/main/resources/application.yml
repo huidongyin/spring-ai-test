@@ -1,0 +1,12 @@
+spring:
+  elasticsearch:
+    uris: http://localhost:9200
+    username:
+    password:
+  ai:
+    vectorstore:
+      elasticsearch:
+        initialize-schema: true
+        index-name: vector-test-005
+        dimensions: 3072
+        similarity: cosine
