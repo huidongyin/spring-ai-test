@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "brand": "Trek",
+    "description": "A high-performance mountain bike for trail riding.",
+    "author": [
+      {
+        "name": "张三",
+        "email": "san.zhang@gmail.com"
+      },
+      {
+        "name": "李四",
+        "email": "si.li@gmail.com"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "brand": "Cannondale",
+    "description": "An aerodynamic road bike for racing enthusiasts.",
+    "author": [
+      {
+        "name": "张三",
+        "email": "san.zhang@gmail.com"
+      },
+      {
+        "name": "李四",
+        "email": "si.li@gmail.com"
+      }
+    ]
+  }
+]
