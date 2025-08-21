@@ -1,0 +1,18 @@
+@SpringBootTest
+@Slf4j
+public class EtlPipelineTextTests {
+
+    @Value("classpath:text-source.txt")
+    private Resource resource;
+
+
+    @Test
+    public void test() {
+        TextReader textReader = new TextReader(this.resource);
+        textReader.getCustomMetadata().put("filename", "text-source.txt");
+        List<Document> documents = textReader.read();
+        for (Document document : documents) {
+            log.info(document.toString());
+        }
+    }
+}

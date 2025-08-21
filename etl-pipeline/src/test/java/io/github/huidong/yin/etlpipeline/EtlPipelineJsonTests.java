@@ -12,7 +12,7 @@ import java.util.List;
 
 @SpringBootTest
 @Slf4j
-class EtlPipelineApplicationTests {
+class EtlPipelineJsonTests {
 
     @Value("classpath:bikes.json")
     private Resource resource;
