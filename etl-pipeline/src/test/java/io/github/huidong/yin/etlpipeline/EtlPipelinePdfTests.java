@@ -38,7 +38,7 @@ public class EtlPipelinePdfTests {
 
     @Test
     public void testPdf2() throws Exception {
-        ParagraphPdfDocumentReader pdfReader = new ParagraphPdfDocumentReader("classpath:/code.pdf",
+        ParagraphPdfDocumentReader pdfReader = new ParagraphPdfDocumentReader("classpath:/code2.pdf",
                 PdfDocumentReaderConfig.builder()
                         .withPageTopMargin(0)
                         .withPageExtractedTextFormatter(ExtractedTextFormatter.builder()
