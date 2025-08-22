@@ -58,4 +58,14 @@ public class TransformersKeywordEnricherTests {
         }
     }
 
+    @Test
+    public void test2() throws Exception {
+        Document doc = new Document("This is a document about artificial intelligence and its applications in modern technology.");
+
+        List<Document> enrichedDocs =enrichDocuments(List.of(doc));
+        Document enrichedDoc = enrichedDocs.get(0);
+        String keywords = (String) enrichedDoc.getMetadata().get("excerpt_keywords");
+        log.info("Extracted keywords: {}", keywords);
+    }
+
 }
